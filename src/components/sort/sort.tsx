@@ -2,7 +2,7 @@ import { useState } from "react"
 
 const Sort =()=>{
 
-  const [open,setOpen]=useState<boolean>(true);
+  const [open,setOpen]=useState<boolean>(false);
   const [filter,setFilter]=useState<number>(0)
   const filters=['Популярности','Цене','Алфавиту']
 
