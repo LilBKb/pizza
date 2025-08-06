@@ -10,28 +10,34 @@ import type { IPizza } from "../interfaces";
 
 
 const Home=()=>{
+  const [activeCategory,setActiveCategory]=useState(0)
+  const [items,setItems]=useState<IPizza[]>([]);
+  const [isLoading,setIsLoading]=useState<boolean>(true)
+  const [filter,setFilter]=useState({
+    name:'Популярности',
+    property:'rating',
+  })
 
-    const [items,setItems]=useState<IPizza[]>([]);
-  const [isLoading,SetIsLoading]=useState<boolean>(true)
 
   useEffect(()=>{
-    fetch('https://6892272c447ff4f11fbf60cb.mockapi.io/items')
+    setIsLoading(true)
+    fetch(`https://6892272c447ff4f11fbf60cb.mockapi.io/items?${activeCategory > 0 ? `category=${activeCategory}`:''}&sortBy=${filter.property}`)
   .then((res)=>{
     return res.json();
   })
   .then((arr)=>{
     setItems(arr);
-    SetIsLoading(false)
+    setIsLoading(false)
   })
-  },[items])
+  },[activeCategory,filter])
 
 
     return(
         <>
         <div className="container">
           <div className="content__top">
-            <Categories/>
-            <Sort/>
+            <Categories activeCategory={activeCategory} setActiveCategory={setActiveCategory}/>
+            <Sort filter={filter} setFilter={setFilter}/>
           </div>
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items">

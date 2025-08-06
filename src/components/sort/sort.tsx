@@ -1,13 +1,21 @@
 import { useState } from "react"
 
-const Sort =()=>{
+
+interface Props{
+  filter:any
+  setFilter:(i:any)=>void;
+}
+
+const Sort =({filter,setFilter}:Props)=>{
 
   const [open,setOpen]=useState<boolean>(false);
-  const [filter,setFilter]=useState<number>(0)
-  const filters=['Популярности','Цене','Алфавиту']
+  const list=
+    [{name:'Популярности',property:'rating'},
+    {name:'Цене',property:'price'},
+    {name:'Алфавиту',property:'title'}]
 
 
-  const selectFilter =(i:number)=>{
+  const selectFilter =(i:any)=>{
     setFilter(i);
     setOpen(false);
   }
@@ -28,13 +36,13 @@ const Sort =()=>{
                   />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={()=>setOpen(open=>!open)}>{filters[filter]}</span>
+                <span onClick={()=>setOpen(open=>!open)}>{filter.name}</span>
               </div>
               {open &&
               <div className="sort__popup">
                 <ul>
-                  {filters.map((sort,index)=>{
-                    return <li onClick={()=>selectFilter(index)} className={index==filter?'active':''}>{sort}</li>
+                  {list.map((sort:any,i)=>{
+                    return <li key={i} onClick={()=>selectFilter(sort)} className={sort.property==filter.property?'active':''}>{sort.name}</li>
                   })}
                 </ul>
               </div>}

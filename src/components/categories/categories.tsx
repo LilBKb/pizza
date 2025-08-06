@@ -1,16 +1,19 @@
-import { useState } from "react"
+interface Props{
+  setActiveCategory:(index:number)=>void;
+  activeCategory:number
+}
 
-const Categories =() =>{
+const Categories =({setActiveCategory,activeCategory}:Props) =>{
 
   const categories=['Все','Мясные','Вегетарианская','Гриль','Острые','Закрытые']
-  const [activeIndex,setActiveIndex]=useState(0)
+  
 
 
     return(
         <div className="categories">
               <ul>
                 {categories.map((category:string,index:number)=>{
-                  return <li  key={index} onClick={()=>setActiveIndex(index)} className={activeIndex==index ? 'active' : ''}>{category}</li>
+                  return <li  key={index} onClick={()=>setActiveCategory(index)} className={activeCategory==index ? 'active' : ''}>{category}</li>
                 })}
               </ul>
             </div>
