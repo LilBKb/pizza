@@ -7,39 +7,41 @@ import type { IPizza } from "../interfaces";
 import Pagination from "../components/pagination/Pagination";
 import { SearchContext } from "../App";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveCategory } from "../redux/slices/filterSlice";
+import { setActiveCategory, setCurrentPage } from "../redux/slices/filterSlice";
 import type { RootState } from "../redux/store";
-
-
-
-
+import axios from "axios";
+import { useDebounce } from "../hooks/useDebounce";
 
 
 const Home=()=>{
   const [items,setItems]=useState<IPizza[]>([]);
   const [isLoading,setIsLoading]=useState<boolean>(true)
-  const [currentPage,setCurrentPage]=useState(1);
   const {searchValue}=useContext(SearchContext)
 
   const sortType=useSelector((state:RootState)=>state.filter.sort.property)
   const activeCategory = useSelector((state:RootState)=>state.filter.activeCategory)
+  const currentPage=useSelector((state:RootState)=>state.filter.currentPage)
   const dispatch = useDispatch();
   const setActiveType =(id:number)=>{
     dispatch(setActiveCategory(id))
   }
+  const setActivePage = (page:number)=>{
+    dispatch(setCurrentPage(page))
+  }
+  const debouncedKeywords=useDebounce(searchValue,1500)
 
 
   useEffect(()=>{
     setIsLoading(true)
-    fetch(`https://6892272c447ff4f11fbf60cb.mockapi.io/items?page=${currentPage}&search=${searchValue}&limit=4&${activeCategory > 0 ? `category=${activeCategory}`:''}&sortBy=${sortType}`)
+    axios.get(`https://6892272c447ff4f11fbf60cb.mockapi.io/items?page=${currentPage}&search=${debouncedKeywords}&limit=4&${activeCategory > 0 ? `category=${activeCategory}`:''}&sortBy=${sortType}`)
   .then((res)=>{
-    return res.json();
+    return res.data;
   })
   .then((arr)=>{
     setItems(arr);
     setIsLoading(false)
   })
-  },[activeCategory,sortType,currentPage,searchValue])
+  },[activeCategory,sortType,currentPage,debouncedKeywords])
 
 
     return(
@@ -57,7 +59,7 @@ const Home=()=>{
             }
                  
           </div>
-          <Pagination setCurrentPage={setCurrentPage}/>
+          <Pagination value={currentPage} setCurrentPage={setActivePage}/>
         </div>
         </>
     )
