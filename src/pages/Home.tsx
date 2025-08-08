@@ -6,26 +6,32 @@ import Sort from "../components/sort/sort";
 import type { IPizza } from "../interfaces";
 import Pagination from "../components/pagination/Pagination";
 import { SearchContext } from "../App";
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveCategory } from "../redux/slices/filterSlice";
+import type { RootState } from "../redux/store";
+
 
 
 
 
 
 const Home=()=>{
-  const [activeCategory,setActiveCategory]=useState(0)
   const [items,setItems]=useState<IPizza[]>([]);
   const [isLoading,setIsLoading]=useState<boolean>(true)
-  const [filter,setFilter]=useState({
-    name:'Популярности',
-    property:'rating',
-  })
   const [currentPage,setCurrentPage]=useState(1);
   const {searchValue}=useContext(SearchContext)
+
+  const sortType=useSelector((state:RootState)=>state.filter.sort.property)
+  const activeCategory = useSelector((state:RootState)=>state.filter.activeCategory)
+  const dispatch = useDispatch();
+  const setActiveType =(id:number)=>{
+    dispatch(setActiveCategory(id))
+  }
 
 
   useEffect(()=>{
     setIsLoading(true)
-    fetch(`https://6892272c447ff4f11fbf60cb.mockapi.io/items?page=${currentPage}&search=${searchValue}&limit=4&${activeCategory > 0 ? `category=${activeCategory}`:''}&sortBy=${filter.property}`)
+    fetch(`https://6892272c447ff4f11fbf60cb.mockapi.io/items?page=${currentPage}&search=${searchValue}&limit=4&${activeCategory > 0 ? `category=${activeCategory}`:''}&sortBy=${sortType}`)
   .then((res)=>{
     return res.json();
   })
@@ -33,15 +39,15 @@ const Home=()=>{
     setItems(arr);
     setIsLoading(false)
   })
-  },[activeCategory,filter,currentPage,searchValue])
+  },[activeCategory,sortType,currentPage,searchValue])
 
 
     return(
         <>
         <div className="container">
           <div className="content__top">
-            <Categories activeCategory={activeCategory} setActiveCategory={setActiveCategory}/>
-            <Sort filter={filter} setFilter={setFilter}/>
+            <Categories activeCategory={activeCategory} setActiveCategory={setActiveType}/>
+            <Sort/>
           </div>
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items">

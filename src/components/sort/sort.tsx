@@ -1,22 +1,26 @@
 import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveSort } from "../../redux/slices/filterSlice";
+import type { RootState } from "../../redux/store";
 
 
-interface Props{
-  filter:any
-  setFilter:(i:any)=>void;
-}
 
-const Sort =({filter,setFilter}:Props)=>{
 
-  const [open,setOpen]=useState<boolean>(false);
-  const list=
+const list=
     [{name:'Популярности',property:'rating'},
     {name:'Цене',property:'price'},
     {name:'Алфавиту',property:'title'}]
 
 
-  const selectFilter =(i:any)=>{
-    setFilter(i);
+
+const Sort =()=>{
+
+  const [open,setOpen]=useState<boolean>(false);
+  const dispatch=useDispatch();
+  const sort = useSelector((state:RootState)=>state.filter.sort)
+
+  const selectFilter =(obj:any)=>{  
+    dispatch(setActiveSort(obj))
     setOpen(false);
   }
 
@@ -36,13 +40,13 @@ const Sort =({filter,setFilter}:Props)=>{
                   />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={()=>setOpen(open=>!open)}>{filter.name}</span>
+                <span onClick={()=>setOpen(open=>!open)}>{sort.name}</span>
               </div>
               {open &&
               <div className="sort__popup">
                 <ul>
-                  {list.map((sort:any,i)=>{
-                    return <li key={i} onClick={()=>selectFilter(sort)} className={sort.property==filter.property?'active':''}>{sort.name}</li>
+                  {list.map((obj:any,i)=>{
+                    return <li key={i} onClick={()=>selectFilter(obj)} className={obj.property==sort.property?'active':''}>{obj.name}</li>
                   })}
                 </ul>
               </div>}
