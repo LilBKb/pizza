@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { addItem, minusItem, removeItem } from "../../redux/slices/cartSlice";
+import { pizzaTypes } from "../pizza/pizzaBlock";
 
 
 interface Props{
@@ -24,6 +25,9 @@ const CartBlock = ({id,title,price,count,imageUrl,type}:Props) => {
 
   const onClickMinus=()=>{
     dispatch(minusItem(id))
+    if(count==1){
+      dispatch(removeItem(id))
+    }
   }
 
   const removeItemCart=()=>{
@@ -42,7 +46,7 @@ const CartBlock = ({id,title,price,count,imageUrl,type}:Props) => {
       </div>
       <div className="cart__item-info">
         <h3>{title}</h3>
-        <p>{type}, 26 см.</p>
+        <p>{pizzaTypes[type]}, 26 см.</p>
       </div>
       <div className="cart__item-count">
         <div onClick={onClickMinus} className="button button--outline button--circle cart__item-count-minus">

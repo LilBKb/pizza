@@ -13,6 +13,8 @@ interface Props{
   id:number
 }
 
+export const pizzaTypes=['Тонкое','Традиционное'];
+
 const PizzaBlock=({id,title,price,imageUrl,sizes,types}:Props)=>{
   const dispatch = useDispatch()
   const cartItem = useSelector((state:RootState)=>state.cart.items.find(obj=>obj.id==id))
@@ -33,7 +35,6 @@ const PizzaBlock=({id,title,price,imageUrl,sizes,types}:Props)=>{
   }
 
 
-  const pizzaTypes=['Тонкое','Традиционное'];
 
     return(
         <div className="pizza-block">
