@@ -1,25 +1,29 @@
 import { useEffect, useRef, useState } from "react"
-import { useDispatch, useSelector } from "react-redux";
 import { setActiveSort } from "../../redux/slices/filterSlice";
-import type { RootState } from "../../redux/store";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { useAppSelector } from "../../hooks/useAppSelector";
+
+interface SortItem {
+  name: string;
+  property: string;
+}
 
 
-
-
-const list=
-    [{name:'Популярности',property:'rating'},
-    {name:'Цене',property:'price'},
-    {name:'Алфавиту',property:'title'}]
+const list: SortItem[] = [
+  {name:'Популярности',property:'rating'},
+  {name:'Цене',property:'price'},
+  {name:'Алфавиту',property:'title'}
+]
 
 
 
 const Sort =()=>{
 
   const [open,setOpen]=useState<boolean>(false);
-  const dispatch=useDispatch();
-  const sort = useSelector((state:RootState)=>state.filter.sort)
+  const dispatch = useAppDispatch();
+  const sort = useAppSelector(state => state.filter.sort)
 
-  const selectFilter =(obj:any)=>{  
+  const selectFilter =(obj: SortItem)=>{  
     dispatch(setActiveSort(obj))
     setOpen(false);
   }
@@ -29,7 +33,8 @@ const Sort =()=>{
 
   useEffect(()=>{
     const handleClick=(event:MouseEvent)=>{
-      if(!event.composedPath().includes(sortRef.current)){
+      const path = event.composedPath();
+      if (sortRef.current && !path.includes(sortRef.current)){
         setOpen(false);
       }
     }
@@ -61,8 +66,8 @@ const Sort =()=>{
               {open &&
               <div className="sort__popup">
                 <ul>
-                  {list.map((obj:any,i)=>{
-                    return <li key={i} onClick={()=>selectFilter(obj)} className={obj.property==sort.property?'active':''}>{obj.name}</li>
+                  {list.map((obj,i)=>{
+                    return <li key={i} onClick={()=>selectFilter(obj)} className={obj.property===sort.property?'active':''}>{obj.name}</li>
                   })}
                 </ul>
               </div>}

@@ -1,6 +1,6 @@
-import { useDispatch } from "react-redux";
 import { addItem, minusItem, removeItem } from "../../redux/slices/cartSlice";
 import { pizzaTypes } from "../pizza/pizzaBlock";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
 
 
 interface Props{
@@ -13,19 +13,22 @@ interface Props{
 }
 
 const CartBlock = ({id,title,price,count,imageUrl,type}:Props) => {
-  const dispatch=useDispatch();
+  const dispatch = useAppDispatch();
 
   const onClickPlus=()=>{
-    dispatch
-      (addItem({
-        id
-      })
-    )
+    dispatch(addItem({
+      id,
+      title,
+      price,
+      imageUrl,
+      type,
+      size: 0
+    }))
   }
 
   const onClickMinus=()=>{
     dispatch(minusItem(id))
-    if(count==1){
+    if(count===1){
       dispatch(removeItem(id))
     }
   }
