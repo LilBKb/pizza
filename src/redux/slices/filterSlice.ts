@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 
 
 interface FilterState {
@@ -24,13 +25,13 @@ export const filterSlice = createSlice({
   name: 'filter',
   initialState,
   reducers: {
-    setActiveCategory: (state,action) => {
+    setActiveCategory: (state, action: PayloadAction<number>) => {
       state.activeCategory = action.payload
     },
-    setActiveSort:(state,action)=>{
+    setActiveSort:(state, action: PayloadAction<{name: string, property: string}>)=>{
         state.sort=action.payload
     },
-    setCurrentPage:(state,action)=>{
+    setCurrentPage:(state, action: PayloadAction<number>)=>{
       state.currentPage=action.payload
     }
   },

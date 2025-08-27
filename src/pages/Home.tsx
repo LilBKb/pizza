@@ -5,22 +5,22 @@ import Skeleton from "../components/pizza/skeleton";
 import Sort from "../components/sort/sort";
 import Pagination from "../components/pagination/Pagination";
 import { SearchContext } from "../App";
-import { useDispatch, useSelector } from "react-redux";
 import { setActiveCategory, setCurrentPage } from "../redux/slices/filterSlice";
-import type { RootState } from "../redux/store";
 import { useDebounce } from "../hooks/useDebounce";
-import {fetchPizzas}  from "../redux/slices/pizzaSlice";
+import { fetchPizzas } from "../redux/slices/pizzaSlice";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useAppSelector } from "../hooks/useAppSelector";
 
 
 const Home=()=>{
   const {searchValue}=useContext(SearchContext)
 
-  const sortType=useSelector((state:RootState)=>state.filter.sort.property)
-  const activeCategory = useSelector((state:RootState)=>state.filter.activeCategory)
-  const currentPage=useSelector((state:RootState)=>state.filter.currentPage)
-  const dispatch = useDispatch();
-  const items = useSelector((state:RootState)=>state.pizza.items)
-  const status = useSelector((state:RootState)=>state.pizza.status)
+  const sortType = useAppSelector(state => state.filter.sort.property)
+  const activeCategory = useAppSelector(state => state.filter.activeCategory)
+  const currentPage = useAppSelector(state => state.filter.currentPage)
+  const dispatch = useAppDispatch();
+  const items = useAppSelector(state => state.pizza.items)
+  const status = useAppSelector(state => state.pizza.status)
 
 
   const setActiveType =(id:number)=>{
@@ -33,14 +33,14 @@ const Home=()=>{
 
 useEffect(()=>{
   const fetchPizza = async () =>{
-  dispatch<any>(fetchPizzas({
+    dispatch(fetchPizzas({
         sortType,
         debouncedKeywords,
         activeCategory,
         currentPage
       }))
-}
-fetchPizza()
+  }
+  fetchPizza()
 },[sortType,debouncedKeywords,activeCategory,currentPage]) 
 
 
